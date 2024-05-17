@@ -28,7 +28,21 @@ public class GT4500Test {
     boolean result = ship.fireTorpedo(FiringMode.SINGLE);
 
     // Assert
-    //assertEquals(true, result);
+    assertEquals(true, result);
+    verify(primary, times(1)).fire(1);
+    verify(secondary, times(0)).fire(anyInt());
+  }
+
+  @Test
+  public void fireTorpedo_Single_Failure(){
+    // Arrange
+    when(primary.fire(1)).thenReturn(false);
+
+    // Act
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+
+    // Assert
+    assertEquals(false, result);
     verify(primary, times(1)).fire(1);
     verify(secondary, times(0)).fire(anyInt());
   }
@@ -43,8 +57,69 @@ public class GT4500Test {
     boolean result = ship.fireTorpedo(FiringMode.ALL);
 
     // Assert
-    //assertEquals(true, result);
+    assertEquals(true, result);
     verify(primary, times(1)).fire(1);
+    verify(secondary, times(1)).fire(1);
+  }
+
+  @Test
+  public void fireTorpedo_All_Failure(){
+    // Arrange
+    when(primary.fire(1)).thenReturn(false);
+    when(secondary.fire(1)).thenReturn(false);
+
+    // Act
+    boolean result = ship.fireTorpedo(FiringMode.ALL);
+
+    // Assert
+    assertEquals(false, result);
+    verify(primary, times(1)).fire(1);
+    verify(secondary, times(1)).fire(1);
+  }
+
+  @Test
+  public void fireTorpedo_Single_Secondary_Fallback(){
+    // Arrange
+    when(primary.fire(1)).thenReturn(false);
+    when(secondary.fire(1)).thenReturn(true);
+
+    // Act
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+
+    // Assert
+    assertEquals(true, result);
+    verify(primary, times(1)).fire(1);
+    verify(secondary, times(1)).fire(1);
+  }
+
+  @Test
+  public void fireTorpedo_Primary_Empty_Secondary_Success(){
+    // Arrange
+    when(primary.isEmpty()).thenReturn(true);
+    when(secondary.fire(1)).thenReturn(true);
+
+    // Act
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+
+    // Assert
+    assertEquals(true, result);
+    verify(primary, times(0)).fire(anyInt());
+    verify(secondary, times(1)).fire(1);
+  }
+
+  //Uj teszt pusztan a kod segitsegevel
+  @Test
+  public void fireTorpedo_Primary_Empty_Secondary_Failure(){
+    // Arrange
+    when(primary.isEmpty()).thenReturn(true);
+    when(secondary.fire(1)).thenReturn(false);
+
+    // Act
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+
+    // Assert
+    assertEquals(false, result);
+    verify(primary, times(0)).fire(anyInt());
     verify(secondary, times(1)).fire(1);
   }
 
