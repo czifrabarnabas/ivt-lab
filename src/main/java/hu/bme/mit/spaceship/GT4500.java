@@ -12,10 +12,11 @@ public class GT4500 implements SpaceShip {
 
   public GT4500(TorpedoStore primary, TorpedoStore secondary) {
     if(primary == null || secondary == null) {
+      throw new IllegalArgumentException();
+    }else {
+
       this.primaryTorpedoStore = primary;
       this.secondaryTorpedoStore = secondary;
-    }else {
-      throw new IllegalArgumentException();
     }
   }
 
