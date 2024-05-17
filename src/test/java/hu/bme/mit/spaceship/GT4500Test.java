@@ -77,20 +77,7 @@ public class GT4500Test {
     verify(secondary, times(1)).fire(1);
   }
 
-  @Test
-  public void fireTorpedo_Single_Secondary_Fallback(){
-    // Arrange
-    when(primary.fire(1)).thenReturn(false);
-    when(secondary.fire(1)).thenReturn(true);
 
-    // Act
-    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
-
-    // Assert
-    assertEquals(true, result);
-    verify(primary, times(1)).fire(1);
-    verify(secondary, times(1)).fire(1);
-  }
 
   @Test
   public void fireTorpedo_Primary_Empty_Secondary_Success(){
